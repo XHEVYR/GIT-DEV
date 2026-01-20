@@ -1,65 +1,81 @@
-import Image from "next/image";
+export type Hotel = {
+    id: string;
+    nama: string;
+    alamat: string;
+    lat: number;
+    lon: number;
+};
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useEffect, useState } from 'react';
 
-export default function Home() {
+const hotelIcon = new L.Icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/139/139899.png',
+  iconSize: [25, 25],
+});
+
+const Map=() => {
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [fnb, setFnb] = useState<any[]>([]);
+  
+  useEffect(() => {
+    fetch('public/data-hotel.json')
+      .then(response => response.json())
+      .then(data => setHotels(data));
+    fetch('public/data-fnb.json')
+      .then(response => response.json())
+      .then(data => setFnb(data));
+  }, []);
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <MapContainer center={[-8.098064989795585, 112.16514038306394]} zoom={13} style={{ height: '100vh', width: '100%' }}>
+      <TileLayer
+      attribution= '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+>
+      {hotels.map((hotel) => (
+        <Marker key={hotel.id} position={[hotel.lat, hotel.lon]} icon={hotelIcon}>
+          <Popup>
+            <strong>{hotel.nama}</strong><br />
+            {hotel.alamat}
+          </Popup>
+        </Marker>
+      ))}
+      {fnb.map((place) => (
+        <Marker key={place.id} position={[place.lat, place.lon]} icon={hotelIcon}>
+          <Popup>
+            <strong>{place.nama}</strong><br />
+            {place.alamat}
+          </Popup>
+        </Marker>
+      ))}
+</TileLayer>
+    </MapContainer>
   );
 }
+    /* </MapContainer>
+    <MapContainer center={[-8.098064989795585, 112.16514038306394]} zoom={13} style={{ height: '100vh', width: '100%' }}>
+      <TileLayer
+      attribution= '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      url='https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.png'
+>
+      {hotels.map((hotel) => (
+        <Marker key={hotel.id} position={[hotel.lat, hotel.lon]} icon={hotelIcon}>
+          <Popup>
+            <strong>{hotel.nama}</strong><br />
+            {hotel.alamat}
+          </Popup>
+        </Marker>
+      ))}
+      {fnb.map((place) => (
+        <Marker key={place.id} position={[place.lat, place.lon]} icon={hotelIcon}>
+          <Popup>
+            <strong>{place.nama}</strong><br />
+            {place.alamat}
+          </Popup>
+        </Marker>
+      ))}
+</TileLayer>
+    </MapContainer>
+  );
+}; */

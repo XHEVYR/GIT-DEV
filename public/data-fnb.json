@@ -1,0 +1,30 @@
+[
+    {
+        "id": "fnb_001",
+        "nama": "Berubetto Homebaked - Bakery and Pastry",
+        "alamat": "Jl. Kelud, Kepanjen Lor, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66117",
+        "ltd": -8.09827742678675,
+        "lng": 112.16735052322534
+    },
+    {
+        "id": "fnb_002",
+        "nama": "Dea Bakery Blitar",
+        "alamat": "Jl. Veteran No.5, Kepanjen Kidul, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66117",
+        "ltd": -8.099764482586593, 
+        "lng": 112.16870235652793
+    },
+    {
+        "id": "fnb_003",
+        "nama": "Olivia Bakery Blitar",
+        "alamat": "Jl. Veteran Gg. 1, Kepanjen Kidul, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66117",
+        "ltd": -8.101017853923546,  
+        "lng": 112.16831611844148
+    },
+    {
+        "id": "fnb_004",
+        "nama": "Holland Bakery Blitar",
+        "alamat": "Jl. Veteran No.64, Kepanjen Kidul, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66111",
+        "ltd": -8.10254738653897,   
+        "lng": 112.16799425336944
+    }
+]
