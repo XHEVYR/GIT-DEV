@@ -1,0 +1,34 @@
+[{
+    "id": "cafe_001",
+    "nama": "Roketto Coffee & Co Blitar",
+    "kategori": "Cafe",
+    "alamat": "Jl. Veteran No.141, Plosokerep, Kec. Sananwetan, Kota Blitar, Jawa Timur 66134",
+    "lat": -8.105755137448968,
+    "lon": 112.16765093062591
+},
+{
+    "id": "cafe_002",
+    "nama": "Nata Coffee & Eatery",
+    "kategori": "Cafe",
+    "alamat": "Jl. Veteran No.129, Kepanjen Kidul, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66134",
+    "lat": -8.104692971105449, 
+    "lon": 112.16792988035502
+},
+{
+    "id": "cafe_003",
+    "nama": "O10thic Coffee Eatery",
+    "kategori": "Cafe",
+    "alamat": "Jl. Diponegoro No.24, Sananwetan, Kec. Sananwetan, Kota Blitar, Jawa Timur 66137",
+    "lat": -8.098102728499072, 
+    "lon": 112.17496735612661
+},
+{
+    "id": "cafe_004",
+    "nama": "Dilan Kopi Blitar",
+    "kategori": "Cafe",
+    "alamat": "Jl. Kelud No.101, Kepanjen Lor, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66117",
+    "lat": -8.093841055153632, 
+    "lon": 112.1676853090116
+}
+
+]
