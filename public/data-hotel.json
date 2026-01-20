@@ -2,31 +2,33 @@
     {
         "id": "hotel_001",
         "nama": "Hotel Ilhami Nglegok",
+        "kategori": "Hotel",
         "alamat": "Jl. Raya Penataran No.42, Nglegok 2, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur 66181",
         "lat": -8.036974093630127,
-        "lng": 112.21706049666085
+        "lon": 112.21706049666085
     },
     {
-        "id": 2,
+        "id": "hotel_002",
         "nama": "Djoglo Jatimalang",
+        "kategori": "Hotel",
         "alamat": "Jl. Ir. Soekarno No.450, Sentul, Kec. Kepanjenkidul, Kota Blitar, Jawa Timur 66113",
         "lat": -8.064647256943998,
-        "lng": 112.1912236617245
+        "lon": 112.1912236617245
     },
     {
-        "id": 3,
+        "id": "hotel_003",
         "nama": "Hotel Grand Mansion 2",
+        "kategori": "Hotel",
         "alamat": "Jl. Irian No.29, Jajar, Kanigoro, Kec. Kanigoro, Kabupaten Blitar, Jawa Timur 66171",
-        "lat": -8.128321865994145, 
-        "lng": 112.22645177184306
+        "lat": -8.128321865994145,
+        "lon": 112.22645177184306
     },
     {
-        "id": 4,
+        "id": "hotel_004",
         "nama": "Hotel Gita Puri RedPartner",
+        "kategori": "Hotel",
         "alamat": "Jl. Cemara, Cangkring, Plosoarang, Kec. Sanankulon, Kabupaten Blitar, Jawa Timur 66125",
-        "lat": -8.127762593077481, 
-        "lng": 112.1523950976199
+        "lat": -8.127762593077481,
+        "lon": 112.1523950976199
     }
-    
-
 ]
