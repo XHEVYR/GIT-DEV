@@ -5,6 +5,15 @@ import 'leaflet/dist/leaflet.css';
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 
+// Define proper type for places
+interface Place {
+  id: string;
+  name: string;
+  category: string;
+  lat: number;
+  lon: number;
+}
+
 // Fix Icon Marker Hilang
 const icon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
@@ -15,13 +24,13 @@ const icon = L.icon({
 });
 
 export default function Map() {
-  const [places, setPlaces] = useState<any[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
 
   // Fetch data saat peta dibuka
   useEffect(() => {
     fetch('/api/places')
       .then((res) => res.json())
-      .then((data) => setPlaces(data));
+      .then((data: Place[]) => setPlaces(data));
   }, []);
 
   return (
