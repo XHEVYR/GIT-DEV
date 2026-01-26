@@ -10,7 +10,7 @@ interface Place {
   id: string;
   name: string;
   category: string;
-  // image: string;
+  image: string;
   description: string;
   address: string;
   lat: number;
@@ -63,6 +63,14 @@ export default function Map() {
         <Marker key={place.id} position={[place.lat, place.lon]} icon={icon}>
           <Popup>
             {/* <b>{place.image}</b> */}
+            {/* Tampilkan Gambar */}
+              {place.image && (
+                <img 
+                  src={place.image} 
+                  alt={place.name}
+                  className="w-full h-40 object-cover rounded-lg mb-3"
+                />
+              )}
               <b>Nama:</b> {place.name}<br/>
               <b>Kategori:</b> {place.category}<br/>
             <b>Alamat:</b> {place.address}<br/>
