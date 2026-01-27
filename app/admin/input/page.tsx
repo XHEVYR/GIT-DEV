@@ -129,6 +129,18 @@ export default function InputPage() {
                 <p className="text-xs text-gray-500 mt-2">💡 Copy link gambar dari Google Images</p>
               </div>
 
+              {/* PREVIEW IMAGE */}
+          {form.image && (
+            <div className="mt-3 relative w-full h-40 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+              <img 
+                src={form.image} 
+                alt="Preview" 
+                className="w-full h-full object-cover" 
+                onError={(e) => e.currentTarget.src = "https://via.placeholder.com/400x300?text=URL+Tidak+Valid"} 
+              />
+            </div>
+          )}
+
               {/* ALAMAT */}
               <div>
                 <label className="block text-sm font-semibold text-gray-800 mb-2">Alamat Lengkap *</label>
