@@ -1,8 +1,8 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, LayerGroup, LayersControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import L from 'leaflet';
 
 // Define proper type for places
@@ -52,27 +52,70 @@ export default function Map() {
     fetchPlaces();
   }, []);
 
+  // 1. EKSTRAKSI KATEGORI UNIK
+  // Kita menggunakan useMemo agar tidak menghitung ulang setiap render kecuali places berubah
+  const categories = useMemo(() => {
+    // Ambil semua kategori, masukkan ke Set biar unik, lalu jadikan array lagi
+    const uniqueCats = new Set(places.map(p => p.category));
+    return Array.from(uniqueCats);
+  }, [places]);
+
   if (loading) return <div>Loading map...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <MapContainer center={[-8.098064989795585, 112.16514038306394]} zoom={13} style={{ height: "100%", width: "100%" }}>
-      <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
       
-      {places.map((place) => (
-        <Marker key={place.id} position={[place.lat, place.lon]} icon={icon}>
-          <Popup>
-            <div className="w-60">
-              {place.image && (
-                <img src={place.image} alt={place.name} className="w-full h-40 object-cover rounded-lg mb-3"/>)}
-              <b>Nama:</b> {place.name}<br/>
-              <b>Kategori:</b> {place.category}<br/>
-            <b>Alamat:</b> {place.address}<br/>
-            <b>Keterangan:</b> {place.description}<br/>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {/* Opsi Tambahan: Masukkan TileLayer ke BaseLayer agar rapi di control panel */}
+      <LayersControl position="topright">
+        
+        <LayersControl.BaseLayer checked name="Peta Satelit">
+          <TileLayer 
+            url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.png" 
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' 
+          />
+        </LayersControl.BaseLayer>
+
+        <LayersControl.BaseLayer name="Peta Jalan (OSM)">
+           <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; OpenStreetMap contributors'
+          />
+        </LayersControl.BaseLayer>
+
+        
+
+        {/* 2. LOOPING KATEGORI UNTUK OVERLAY */}
+        {categories.map((category) => (
+          <LayersControl.Overlay checked name={category} key={category}>
+            <LayerGroup>
+              {/* 3. FILTER DATA BERDASARKAN KATEGORI */}
+              {places
+                .filter((place) => place.category === category)
+                .map((place) => (
+                  <Marker key={place.id} position={[place.lat, place.lon]} icon={icon}>
+                    <Popup>
+                      <div className="w-60">
+                        {place.image && (
+                          <img 
+                            src={place.image} 
+                            alt={place.name} 
+                            className="w-full h-40 object-cover rounded-lg mb-3"
+                          />
+                        )}
+                        <b>Nama:</b> {place.name}<br/>
+                        <b>Kategori:</b> {place.category}<br/>
+                        <b>Alamat:</b> {place.address}<br/>
+                        <b>Keterangan:</b> {place.description}<br/>
+                      </div>
+                    </Popup>
+                  </Marker>
+              ))}
+            </LayerGroup>
+          </LayersControl.Overlay>
+        ))}
+
+      </LayersControl>
     </MapContainer>
   );
 }
