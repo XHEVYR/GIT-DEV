@@ -1,43 +1,44 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Menu, X, MapPin, Plus, Map, Moon, Sun } from 'lucide-react';
+import { useState } from 'react';
+import { Menu, X, MapPin, Plus, Map } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
+  interface NavItemProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  isMinimized: boolean;
+  active: boolean;
+}
 
 export default function AdminSidebar() {
   const [isMinimized, setIsMinimized] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    const savedTheme = localStorage.getItem('sidebar-theme');
-    return savedTheme === 'dark';
-  });
+  const pathname = usePathname();
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDark;
-    setIsDark(newDarkMode);
-    localStorage.setItem('sidebar-theme', newDarkMode ? 'dark' : 'light');
-  };
 
-  // Helper untuk class warna agar kode tidak terlalu panjang di dalam JSX
-  const themeClasses = isDark 
-    ? 'bg-slate-950 border-slate-800 text-slate-300' 
-    : 'bg-white border-slate-200 text-slate-600';
+
+  // Helper untuk menentukan apakah link sedang aktif
+  const isActive = (path: string) => pathname === path;
 
   return (
     <aside
-      className={`${isMinimized ? 'w-20' : 'w-64'} ${themeClasses} h-screen fixed left-0 top-0 border-r transition-all duration-300 ease-in-out flex flex-col`}
+      className={`${
+        isMinimized ? 'w-20' : 'w-64'
+      } bg-white h-screen fixed left-0 top-0 border-r border-slate-200 transition-all duration-300 ease-in-out flex flex-col shadow-sm z-50`}
     >
       {/* Header */}
       <div className={`flex items-center ${isMinimized ? 'justify-center' : 'justify-between'} p-6 mb-2`}>
         {!isMinimized && (
-          <h1 className={`text-xl font-bold tracking-tight ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
-            Ne<span className={isDark ? 'text-slate-100' : 'text-slate-900'}>Lar</span>
+          <h1 className="text-xl font-bold tracking-tight text-indigo-600">
+            GIS<span className="text-slate-900">App</span>
           </h1>
         )}
         <button
           onClick={() => setIsMinimized(!isMinimized)}
-          className={`p-2 rounded-xl transition-colors ${
-            isDark ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-500'
-          }`}
+          className="p-2 rounded-xl transition-colors hover:bg-slate-100 text-slate-500"
+          title={isMinimized ? "Buka Menu" : "Tutup Menu"}
         >
           {isMinimized ? <Menu size={22} /> : <X size={22} />}
         </button>
@@ -50,61 +51,55 @@ export default function AdminSidebar() {
           icon={<MapPin size={20} />} 
           label="Data Lokasi" 
           isMinimized={isMinimized} 
-          isDark={isDark} 
+          active={isActive('/admin')}
         />
         <NavItem 
           href="/admin/input" 
           icon={<Plus size={20} />} 
           label="Tambah Baru" 
           isMinimized={isMinimized} 
-          isDark={isDark} 
+          active={isActive('/admin/input')}
         />
         
-        <div className={`my-4 mx-3 h-px ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`} />
+        <div className="my-4 mx-3 h-px bg-slate-100" />
         
         <NavItem 
           href="/peta" 
           icon={<Map size={20} />} 
           label="Lihat Peta" 
           isMinimized={isMinimized} 
-          isDark={isDark} 
+          active={isActive('/peta')}
         />
       </nav>
 
-      {/* Bottom Actions (Dark Mode Toggle) */}
-      <div className={`p-4 border-t ${isDark ? 'border-slate-800' : 'border-slate-100'}`}>
-        <button
-          onClick={toggleDarkMode}
-          className={`flex items-center w-full gap-3 px-3 py-3 rounded-xl transition-all duration-200 ${
-            isDark 
-              ? 'hover:bg-slate-800 text-yellow-400' 
-              : 'hover:bg-slate-100 text-indigo-600'
-          } ${isMinimized ? 'justify-center' : ''}`}
-        >
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          {!isMinimized && <span className="text-sm font-medium">{isDark ? 'Light Mode' : 'Dark Mode'}</span>}
-        </button>
-      </div>
+      {/* Footer (Opsional) */}
+      {!isMinimized && (
+        <div className="p-6 border-t border-slate-100">
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">
+            Admin Dashboard v1.0
+          </p>
+        </div>
+      )}
     </aside>
   );
 }
 
-// Komponen Kecil untuk Navigasi agar kode utama lebih bersih
-function NavItem({ href, icon, label, isMinimized, isDark }: any) {
-  const activeStyles = isDark 
-    ? 'hover:bg-indigo-500/10 hover:text-indigo-400' 
-    : 'hover:bg-indigo-50 hover:text-indigo-600';
-
+// Komponen Kecil NavItem
+function NavItem({ href, icon, label, isMinimized, active }: NavItemProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-200 group ${activeStyles} ${
-        isMinimized ? 'justify-center' : ''
-      }`}
+      className={`flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-200 group ${
+        active 
+          ? 'bg-indigo-50 text-indigo-600 shadow-sm' 
+          : 'hover:bg-slate-50 text-slate-500 hover:text-slate-900'
+      } ${isMinimized ? 'justify-center' : ''}`}
       title={isMinimized ? label : ''}
     >
-      <div className="flex-shrink-0">{icon}</div>
-      {!isMinimized && <span className="text-sm font-medium">{label}</span>}
+      <div className={`shrink-0 ${active ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
+        {icon}
+      </div>
+      {!isMinimized && <span className="text-sm font-semibold">{label}</span>}
     </Link>
   );
 }
