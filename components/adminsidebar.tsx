@@ -3,78 +3,103 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X, MapPin, Plus, Map } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+
+  interface NavItemProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  isMinimized: boolean;
+  active: boolean;
+}
 
 export default function AdminSidebar() {
   const [isMinimized, setIsMinimized] = useState(false);
+  const pathname = usePathname();
+
+
+
+  // Helper untuk menentukan apakah link sedang aktif
+  const isActive = (path: string) => pathname === path;
 
   return (
     <aside
       className={`${
         isMinimized ? 'w-20' : 'w-64'
-      } bg-gradient-to-b from-slate-900 to-slate-950 text-white h-screen fixed left-0 top-0 border-r border-slate-800 transition-all duration-300 ease-in-out`}
+      } bg-white h-screen fixed left-0 top-0 border-r border-slate-200 transition-all duration-300 ease-in-out flex flex-col shadow-sm z-50`}
     >
-      {/* Header Toggle */}
-      <div className="flex items-center justify-center p-6 border-b border-slate-800 relative">
+      {/* Header */}
+      <div className={`flex items-center ${isMinimized ? 'justify-center' : 'justify-between'} p-6 mb-2`}>
         {!isMinimized && (
-          <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            GIS Map
+          <h1 className="text-xl font-bold tracking-tight text-indigo-600">
+            GIS<span className="text-slate-900">App</span>
           </h1>
         )}
         <button
           onClick={() => setIsMinimized(!isMinimized)}
-          className="p-2 hover:bg-slate-800 rounded-lg transition duration-200 text-slate-400 hover:text-white absolute right-2"
+          className="p-2 rounded-xl transition-colors hover:bg-slate-100 text-slate-500"
+          title={isMinimized ? "Buka Menu" : "Tutup Menu"}
         >
-          {isMinimized ? <Menu size={20} /> : <X size={20} />}
+          {isMinimized ? <Menu size={22} /> : <X size={22} />}
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className={`${isMinimized ? 'p-3' : 'p-6'} space-y-3 flex-1`}>
-        {/* Data Lokasi */}
-        <Link
-          href="/admin"
-          className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 ${
-            isMinimized
-              ? 'justify-center hover:bg-slate-800'
-              : 'hover:bg-slate-800'
-          } text-slate-300 hover:text-white group`}
-          title={isMinimized ? 'Data Lokasi' : ''}
-        >
-          <MapPin size={20} className="flex-shrink-0" />
-          {!isMinimized && <span>Data Lokasi</span>}
-        </Link>
-
-        {/* Tambah Baru */}
-        <Link
-          href="/admin/input"
-          className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 ${
-            isMinimized
-              ? 'justify-center hover:bg-slate-800'
-              : 'hover:bg-slate-800'
-          } text-slate-300 hover:text-white group`}
-          title={isMinimized ? 'Tambah Baru' : ''}
-        >
-          <Plus size={20} className="flex-shrink-0" />
-          {!isMinimized && <span>Tambah Baru</span>}
-        </Link>
-
-        {/* Divider */}
-        {!isMinimized && <div className="my-6 h-px bg-slate-800"></div>}
-
-        {/* Lihat Peta */}
-        <Link
-          href="/peta"
-          className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-200 ${
-            isMinimized
-              ? 'justify-center hover:bg-slate-800'
-              : 'hover:bg-slate-800'
-          } text-cyan-400 hover:text-cyan-300 font-semibold group`}
-          title={isMinimized ? 'Lihat Peta' : ''}
-        >
-          <Map size={20} className="flex-shrink-0" />
-          {!isMinimized && <span>Lihat Peta</span>}
-        </Link>
+      <nav className="flex-1 px-3 space-y-2">
+        <NavItem 
+          href="/admin" 
+          icon={<MapPin size={20} />} 
+          label="Data Lokasi" 
+          isMinimized={isMinimized} 
+          active={isActive('/admin')}
+        />
+        <NavItem 
+          href="/admin/input" 
+          icon={<Plus size={20} />} 
+          label="Tambah Baru" 
+          isMinimized={isMinimized} 
+          active={isActive('/admin/input')}
+        />
+        
+        <div className="my-4 mx-3 h-px bg-slate-100" />
+        
+        <NavItem 
+          href="/peta" 
+          icon={<Map size={20} />} 
+          label="Lihat Peta" 
+          isMinimized={isMinimized} 
+          active={isActive('/peta')}
+        />
       </nav>
+
+      {/* Footer (Opsional) */}
+      {!isMinimized && (
+        <div className="p-6 border-t border-slate-100">
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">
+            Admin Dashboard v1.0
+          </p>
+        </div>
+      )}
     </aside>
+  );
+}
+
+// Komponen Kecil NavItem
+function NavItem({ href, icon, label, isMinimized, active }: NavItemProps) {
+  return (
+    <Link
+      href={href}
+      className={`flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-200 group ${
+        active 
+          ? 'bg-indigo-50 text-indigo-600 shadow-sm' 
+          : 'hover:bg-slate-50 text-slate-500 hover:text-slate-900'
+      } ${isMinimized ? 'justify-center' : ''}`}
+      title={isMinimized ? label : ''}
+    >
+      <div className={`shrink-0 ${active ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
+        {icon}
+      </div>
+      {!isMinimized && <span className="text-sm font-semibold">{label}</span>}
+    </Link>
   );
 }

@@ -1,84 +1,86 @@
+'use client';
 
-"use client";
-
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
+import { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { useState, useRef, useCallback } from 'react';
 import L from 'leaflet';
 
-interface MapInputProps {
-  onLocationSelect: (lat: number, lon: number) => void;
-}
+// --- BAGIAN FIX ICON MARKER ---
+// Kode ini wajib ada di Next.js agar icon marker tidak broken image
+const iconFix = () => {
+  // Hapus getter default
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
 
-
-const icon = L.icon({
-  iconUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 40'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%233b82f6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231e40af;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23grad)' stroke='white' stroke-width='2' d='M16 2C9 2 3 8 3 16c0 8 13 22 13 22s13-14 13-22c0-8-6-14-13-14z'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3C/svg%3E",
-  iconSize: [32, 40],
-  iconAnchor: [16, 40],
-  popupAnchor: [0, -40],
-  shadowSize: [0, 0],
-});
-
-function MapClickHandler({ onLocationSelect }: any) {
-  const handleMapClick = useCallback((e: any) => {
-    const { lat, lng } = e.latlng;
-    onLocationSelect(lat, lng);
-  }, [onLocationSelect]);
-
-  useMapEvents({
-    click: handleMapClick,
+  // Set ulang path gambar ke CDN yang stabil
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   });
-  return null;
-}
+};
 
-function DraggableMarker({ position, onDragEnd }: any) {
-  const markerRef = useRef<any>(null);
+// Jalankan fix icon sekali saat komponen di-mount
+iconFix();
+// ------------------------------
 
-  const handleDragEnd = useCallback(() => {
-    if (markerRef.current) {
-      const { lat, lng } = markerRef.current.getLatLng();
-      onDragEnd(lat, lng);
+// Komponen Child untuk menangani logika Peta
+function LocationMarker({ onSelect, position }: { onSelect: any, position: [number, number] | null }) {
+  const map = useMap();
+
+  // Efek 1: Jika posisi berubah (karena ketik manual), terbangkan peta ke sana
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, map.getZoom(), {
+        animate: true,
+        duration: 1.5 // Animasi halus
+      });
     }
-  }, [onDragEnd]);
+  }, [position, map]);
 
-  return (
-    <Marker
-      ref={markerRef}
-      position={position}
-      icon={icon}
-      draggable={true}
-      eventHandlers={{
-        dragend: handleDragEnd,
-      }}
-    />
+  // Event: Saat peta diklik, panggil fungsi onSelect (mengisi form)
+  useMapEvents({
+    click(e) {
+      onSelect(e.latlng.lat, e.latlng.lng);
+      // Animasi marker pindah ke titik klik
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
+
+  // Tampilkan Marker hanya jika posisi ada
+  return position === null ? null : (
+    <Marker position={position}></Marker>
   );
 }
 
-export default function MapInput({ onLocationSelect }: MapInputProps) {
-  const [position, setPosition] = useState<[number, number]>([-8.098064989795585, 112.16514038306394]);
-  
-  const handleDragEnd = useCallback((lat: number, lng: number) => {
-    setPosition([lat, lng]);
-    onLocationSelect(lat, lng);
-  }, [onLocationSelect]);
+// Props yang diterima komponen utama
+interface MapInputProps {
+  onLocationSelect: (lat: number, lon: number) => void;
+  inputLat?: number;
+  inputLon?: number;
+}
 
-  const handleMapClick = useCallback((lat: number, lng: number) => {
-    setPosition([lat, lng]);
-    onLocationSelect(lat, lng);
-  }, [onLocationSelect]);
+export default function MapInput({ onLocationSelect, inputLat, inputLon }: MapInputProps) {
+  // Tentukan posisi marker: Prioritas dari Input Manual, jika tidak ada null
+  const position: [number, number] | null = (inputLat && inputLon) 
+    ? [inputLat, inputLon] 
+    : null;
+
+  // Koordinat Default (Misal: Monas, Jakarta) untuk tampilan awal jika belum ada data
+  const defaultCenter: [number, number] = [-8.097957655926255, 112.16521686600117];
 
   return (
-    <MapContainer center={position} zoom={13} style={{ height: "100%", width: "100%" }} zoomAnimation={false}>
-      <TileLayer 
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
+    <MapContainer 
+      center={position || defaultCenter} 
+      zoom={13} 
+      style={{ height: "100%", width: "100%", zIndex: 1 }} // zIndex penting agar marker tidak tertutup layer lain
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; OpenStreetMap contributors'
-        maxZoom={19}
-        maxNativeZoom={19}
       />
       
-      <DraggableMarker position={position} onDragEnd={handleDragEnd} />
-      
-      <MapClickHandler onLocationSelect={handleMapClick} />
+      {/* Panggil komponen Logic di dalam MapContainer */}
+      <LocationMarker onSelect={onLocationSelect} position={position} />
     </MapContainer>
   );
 }
