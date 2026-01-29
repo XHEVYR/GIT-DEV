@@ -66,9 +66,6 @@ export default function Dashboard() {
             <h1 className="text-4xl font-extrabold text-slate-900">Dashboard</h1>
             <p className="text-slate-500 mt-2">Statistik data lokasi GIS Kota Blitar</p>
           </div>
-          <Link href="/peta" className="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-indigo-200 transition">
-            <DoorOpenIcon size={20} /> Logout
-          </Link>
         </div>
 
         {/* STATISTIK CARDS */}

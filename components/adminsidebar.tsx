@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, MapPin, Plus, Map, HomeIcon } from 'lucide-react';
+import { Menu, X, MapPin, Plus, Map, HomeIcon, DoorOpenIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
   interface NavItemProps {
@@ -66,16 +66,24 @@ export default function AdminSidebar() {
           label="Tambah Baru" 
           isMinimized={isMinimized} 
           active={isActive('/admin/input')}
-        />
-        
-        <div className="my-4 mx-3 h-px bg-slate-100" />
-        
+        />        
         <NavItem 
           href="/peta" 
           icon={<Map size={20} />} 
           label="Lihat Peta" 
           isMinimized={isMinimized} 
           active={isActive('/peta')}
+        />
+
+                
+        <div className="my-7 mx-3 h-px bg-slate-100" />
+
+        <NavItem 
+          href="/peta" 
+          icon={<DoorOpenIcon size={20} />}
+          label="Logout"
+          isMinimized={isMinimized}
+          active={false}
         />
       </nav>
 
