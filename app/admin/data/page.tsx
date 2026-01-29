@@ -327,7 +327,8 @@ export default function Dashboard() {
         
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">Dashboard</h1>
+            <h1 className="text-3xl font-extrabold text-slate-900">
+              Data <span className="text-indigo-600"> Lokasi</span></h1>
             <p className="text-slate-500 mt-1">Kelola data lokasi GIS Anda.</p>
           </div>
           <Link href="/admin/input" className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition">
