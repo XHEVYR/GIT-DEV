@@ -2,13 +2,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
-  Plus,
   BarChart3,
   Hotel,
   Coffee,
   Plane,
-  DoorOpen,
-  DoorOpenIcon
 } from 'lucide-react';
 
 // Interface Data dari API (Number)
