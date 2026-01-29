@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-lea
 import { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 // --- BAGIAN FIX ICON MARKER ---
 // Kode ini wajib ada di Next.js agar icon marker tidak broken image

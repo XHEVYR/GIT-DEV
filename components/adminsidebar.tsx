@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, MapPin, Plus, Map, HomeIcon, DoorOpenIcon } from 'lucide-react';
+import { Menu, X, MapPin, Plus, Map, HomeIcon, DoorOpenIcon, LogOut } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { signOut } from "next-auth/react"; // <-- 1. IMPORT INI
 
-  interface NavItemProps {
+interface NavItemProps {
   href: string;
   icon: React.ReactNode;
   label: string;
@@ -16,8 +17,6 @@ import { usePathname } from 'next/navigation';
 export default function AdminSidebar() {
   const [isMinimized, setIsMinimized] = useState(false);
   const pathname = usePathname();
-
-
 
   // Helper untuk menentukan apakah link sedang aktif
   const isActive = (path: string) => pathname === path;
@@ -58,7 +57,7 @@ export default function AdminSidebar() {
           icon={<MapPin size={20} />} 
           label="Data Lokasi" 
           isMinimized={isMinimized} 
-          active={isActive('/admin/data')}
+          active={isActive('/admin/data')} // Sesuaikan dengan route folder Anda (misal /admin saja kalau satu halaman)
         />
         <NavItem 
           href="/admin/input" 
@@ -75,16 +74,22 @@ export default function AdminSidebar() {
           active={isActive('/')}
         />
 
-                
         <div className="my-7 mx-3 h-px bg-slate-100" />
 
-        <NavItem 
-          href="/" 
-          icon={<DoorOpenIcon size={20} />}
-          label="Logout"
-          isMinimized={isMinimized}
-          active={false}
-        />
+        {/* 2. TOMBOL LOGOUT (Bukan NavItem lagi) */}
+        <button
+          onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          className={`w-full flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-200 group hover:bg-red-50 text-slate-500 hover:text-red-600 ${
+            isMinimized ? 'justify-center' : ''
+          }`}
+          title={isMinimized ? "Logout" : ''}
+        >
+          <div className="shrink-0 group-hover:text-red-600 text-slate-400 transition-colors">
+            <DoorOpenIcon size={20} />
+          </div>
+          {!isMinimized && <span className="text-sm font-semibold">Logout</span>}
+        </button>
+
       </nav>
 
       {/* Footer (Opsional) */}
@@ -99,7 +104,7 @@ export default function AdminSidebar() {
   );
 }
 
-// Komponen Kecil NavItem
+// Komponen Kecil NavItem (Tetap sama)
 function NavItem({ href, icon, label, isMinimized, active }: NavItemProps) {
   return (
     <Link
