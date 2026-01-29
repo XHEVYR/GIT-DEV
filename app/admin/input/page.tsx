@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { 
   MapPin, 
   Image as ImageIcon, 
@@ -234,11 +233,10 @@ export default function InputPage() {
 
                 {form.image && (
   <div className="md:col-span-2 border-2 border-slate-50 rounded-2xl overflow-hidden bg-slate-100 relative w-full h-44">
-    <Image
+    <img
       src={form.image}
       alt="Preview"
-      fill
-      className="object-cover"
+      className="object-cover w-full h-full"
       onError={(e) => {
         const img = e.currentTarget as HTMLImageElement;
         img.src = "https://via.placeholder.com/600x300?text=Error";

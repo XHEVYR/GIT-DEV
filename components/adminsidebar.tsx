@@ -68,18 +68,18 @@ export default function AdminSidebar() {
           active={isActive('/admin/input')}
         />        
         <NavItem 
-          href="/peta" 
+          href="/" 
           icon={<Map size={20} />} 
           label="Lihat Peta" 
           isMinimized={isMinimized} 
-          active={isActive('/peta')}
+          active={isActive('/')}
         />
 
                 
         <div className="my-7 mx-3 h-px bg-slate-100" />
 
         <NavItem 
-          href="/peta" 
+          href="/" 
           icon={<DoorOpenIcon size={20} />}
           label="Logout"
           isMinimized={isMinimized}
