@@ -99,10 +99,10 @@ export default function Map() {
         
         {/* Base Maps */}
         <LayersControl.BaseLayer checked name="Peta Satelit">
-          <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.png" attribution='&copy; OSM' loading="lazy"/>
+          <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.png" attribution='&copy; OSM'/>
         </LayersControl.BaseLayer>
         <LayersControl.BaseLayer name="Peta Jalan (OSM)">
-           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OSM' />
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OSM' />
         </LayersControl.BaseLayer>
 
         {/* --- TRIK SAKLAR LAYER CONTROL --- */}
