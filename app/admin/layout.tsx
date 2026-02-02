@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import AdminSidebar from "@/components/adminsidebar"; // Sesuaikan huruf besar/kecil nama file Anda
+import AdminSidebar from "@/components/layout/adminsidebar"; // Sesuaikan huruf besar/kecil nama file Anda
 import { useEffect } from "react";
 
 export default function AdminLayout({

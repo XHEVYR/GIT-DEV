@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 // 1. Import Komponen Wajib untuk Login & Keamanan
-import Providers from "@/components/providers";
-import AutoLogout from "@/components/autoLogout";
+import Providers from "@/components/auth/providers";
+import AutoLogout from "@/components/auth/autoLogout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

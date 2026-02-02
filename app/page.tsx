@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSession } from "next-auth/react"; // <--- 1. Import useSession
 
 // Import Peta
-const Map = dynamic(() => import('@/components/map'), { 
+const Map = dynamic(() => import('@/components/maps/map'), { 
   ssr: false,
   loading: () => <div className="h-screen w-full flex items-center justify-center bg-gray-100 text-gray-500">Memuat Peta...</div>
 });

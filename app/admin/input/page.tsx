@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 // Import Map secara dinamis
-const MapInput = dynamic(() => import("@/components/mapinput"), {
+const MapInput = dynamic(() => import("@/components/maps/mapinput"), {
   ssr: false,
   loading: () => (
     <div className="h-96 bg-slate-100 flex items-center justify-center rounded-2xl animate-pulse">
