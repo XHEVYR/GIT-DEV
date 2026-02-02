@@ -5,11 +5,17 @@ import prisma from "@/lib/prisma";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 30 * 60, // 30 Menit (Sesi akan mati sendiri kalau didiamkan)
+    maxAge: 30 * 60,
   },
-  secret: process.env.NEXTAUTH_SECRET, // Mengambil dari .env tadi
+  secret: process.env.NEXTAUTH_SECRET, 
+  // TAMBAHAN PENTING UNTUK VERCEL:
+  trustHost: true, 
+  
+  // Aktifkan debug hanya jika development, atau nyalakan true sementara untuk cek logs di Vercel
+  debug: process.env.NODE_ENV === "development", 
+
   pages: {
-    signIn: "/auth/login", // Halaman login kita
+    signIn: "/auth/login",
   },
   providers: [
     CredentialsProvider({
@@ -21,24 +27,37 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { username: credentials.username }
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { username: credentials.username }
+          });
 
-        // Cek password (Sederhana)
-        if (user && user.password === credentials.password) {
-          return {
-            id: user.id.toString(),
-            name: user.name,
-            username: user.username,
-          };
+          // Debugging log (akan muncul di Vercel Logs)
+          if (!user) {
+            console.log("User tidak ditemukan:", credentials.username);
+            return null;
+          }
+
+          // PERINGATAN: Password plain text (Sangat tidak disarankan untuk production, tapi kita ikuti kode mu dulu)
+          if (user.password === credentials.password) {
+            return {
+              id: user.id.toString(),
+              name: user.name,
+              username: user.username,
+            };
+          } else {
+             console.log("Password salah untuk user:", credentials.username);
+          }
+          
+          return null;
+        } catch (error) {
+          console.error("Error Database saat Login:", error);
+          return null;
         }
-        return null;
       },
     }),
   ],
   callbacks: {
-    // Agar data user ikut tersimpan di sesi browser
     async session({ session, token }: any) {
       if (session?.user) {
         session.user.username = token.username;

@@ -20,26 +20,37 @@ export default function LoginPage() {
   }, []); 
   // ========================
 
-  const handleLogin = async (e: React.FormEvent) => {
+ const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Kita pakai redirect: false agar bisa handle error manual
-    const res = await signIn("credentials", {
-      username: form.username,
-      password: form.password,
-      redirect: false, 
-    });
+    try {
+      const res = await signIn("credentials", {
+        username: form.username,
+        password: form.password,
+        redirect: false, 
+      });
 
-    if (res?.error) {
-      setError("Username atau Password Salah!");
+      console.log("Hasil Login:", res); // Cek console browser setelah deploy
+
+      if (res?.error) {
+        // Error dari NextAuth (misal: password salah)
+        setError("Username atau Password Salah!");
+        setLoading(false);
+      } else if (res?.ok) {
+        // Login Sukses
+        router.push("/admin"); 
+        router.refresh(); 
+      } else {
+        // Error tidak terduga
+        setError("Gagal menghubungi server. Cek koneksi internet atau logs.");
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Login Error Catch:", err);
+      setError("Terjadi kesalahan sistem.");
       setLoading(false);
-    } else {
-      // Login Sukses! 
-      // Karena useEffect di atas dikunci pakai [], dia tidak akan mengganggu proses ini.
-      router.push("/admin"); 
-      router.refresh(); 
     }
   };
 
